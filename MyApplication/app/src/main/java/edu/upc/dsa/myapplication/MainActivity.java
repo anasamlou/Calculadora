@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.Switch;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -42,11 +43,14 @@ public class MainActivity extends AppCompatActivity {
     private final char signoMENOS = '-';
     private final char signoMULT = '*';
     private final char signoDIV = '/';
+    private final char signoIGUAL = '=';
     private final char signoSIN = 'S';
     private final char signoCOS = 'C';
     private final char signoTAN = 'T';
-    private double opVALUE = Double.NaN;
-    private double resultVALUE;
+    private double opVALUE1 = Double.NaN;
+    private double opVALUE2;
+    private char ACTION;
+    private Switch rad;
 
 
     @Override
@@ -114,33 +118,159 @@ public class MainActivity extends AppCompatActivity {
                 operation.setText(operation.getText().toString() + "9");
             }
         });
+        coma.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                operation.setText(operation.getText().toString() + ".");
+            }
+        });
+        plus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                compute();
+                ACTION  = signoMAS;
+                result.setText(String.valueOf(opVALUE1) + "+");
+                operation.setText(null);
+            }
+        });
+        minus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                compute();
+                ACTION  = signoMENOS;
+                result.setText(String.valueOf(opVALUE1) + "-");
+                operation.setText(null);            }
+        });
+        division.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                compute();
+                ACTION  = signoDIV;
+                result.setText(String.valueOf(opVALUE1) + "/");
+                operation.setText(null);            }
+        });
+        multiplication.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                compute();
+                ACTION  = signoMAS;
+                result.setText(String.valueOf(opVALUE1) + "*");
+                operation.setText(null);            }
+        });
+        equal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                compute();
+                ACTION = signoIGUAL;
+                result.setText(result.getText().toString() + String.valueOf(opVALUE2) + "=" + String.valueOf(opVALUE1));
+                operation.setText(null);
+            }
+        });
+        sinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (rad.isChecked()) {
+                    double a = Math.sin(Double.parseDouble(operation.getText().toString()));
+                    result.setText(String.valueOf(a));
+                }
+                else{
+                    double deg = Double.parseDouble(operation.getText().toString()) * Math.PI / 180;
+                    result.setText(String.valueOf(Math.sin(deg)));
+                }
+            }
+        });
+        cosinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (rad.isChecked()) {
+                    double a = Math.cos(Double.parseDouble(operation.getText().toString()));
+                    result.setText(String.valueOf(a));
+                }
+                else{
+                    double deg = Double.parseDouble(operation.getText().toString()) * Math.PI / 180;
+                    result.setText(String.valueOf(Math.cos(deg)));
+                }
+            }
+        });
+        tangent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (rad.isChecked()) {
+                    double a = Math.tan(Double.parseDouble(operation.getText().toString()));
+                    result.setText(String.valueOf(a));
+                }
+                else{
+                    double deg = Double.parseDouble(operation.getText().toString()) * Math.PI / 180;
+                    result.setText(String.valueOf(Math.tan(deg)));
+                }
+            }
+        });
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               operation.setText(null);
+               result.setText(null);
+               opVALUE1 = Double.NaN;
+               opVALUE2 = Double.NaN;
+
+
+            }
+        });
+
+
 
     }
     private void setupLayout(){
-        zero = (Button)findViewById(R.id.button0)
-        one = (Button)findViewById(R.id.button1)
-        two = (Button)findViewById(R.id.button2)
-        three = (Button)findViewById(R.id.button3)
-        four = (Button)findViewById(R.id.button4)
-        five = (Button)findViewById(R.id.button5)
-        six = (Button)findViewById(R.id.button6)
-        seven = (Button)findViewById(R.id.button7)
-        eight = (Button)findViewById(R.id.button8)
-        nine = (Button)findViewById(R.id.button9)
-        coma = (Button)findViewById(R.id.buttonCOMA)
-        plus = (Button)findViewById(R.id.buttonPLUS)
-        minus = (Button)findViewById(R.id.buttonMINUS)
-        division = (Button)findViewById(R.id.buttonDIV)
-        multiplication = (Button)findViewById(R.id.buttonMULT)
-        sinus = (Button)findViewById(R.id.buttonSIN)
-        cosinus = (Button)findViewById(R.id.buttonCOS)
-        tangent = (Button)findViewById(R.id.buttonTAN)
-        operation = (TextView) findViewById(R.id.textViewOPERATION)
-        result = (TextView) findViewById(R.id.textViewRESULT)
+        zero = (Button)findViewById(R.id.button0);
+        one = (Button)findViewById(R.id.button1);
+        two = (Button)findViewById(R.id.button2);
+        three = (Button)findViewById(R.id.button3);
+        four = (Button)findViewById(R.id.button4);
+        five = (Button)findViewById(R.id.button5);
+        six = (Button)findViewById(R.id.button6);
+        seven = (Button)findViewById(R.id.button7);
+        eight = (Button)findViewById(R.id.button8);
+        nine = (Button)findViewById(R.id.button9);
+        coma = (Button)findViewById(R.id.buttonCOMA);
+        plus = (Button)findViewById(R.id.buttonPLUS);
+        minus = (Button)findViewById(R.id.buttonMINUS);
+        clear = (Button)findViewById(R.id.ACbutton);
+        division = (Button)findViewById(R.id.buttonDIV);
+        multiplication = (Button)findViewById(R.id.buttonMULT);
+        equal = (Button)findViewById(R.id.buttonEQUAL);
+        sinus = (Button)findViewById(R.id.buttonSIN);
+        cosinus = (Button)findViewById(R.id.buttonCOS);
+        tangent = (Button)findViewById(R.id.buttonTAN);
+        operation = (TextView) findViewById(R.id.textViewOPERATION);
+        result = (TextView)findViewById(R.id.textViewRESULT);
+        rad = (Switch)findViewById(R.id.switch1);
 
     }
     private void compute(){
-        if (!Double.isNaN(opVALUE))
-            Double.parseDouble(operation.getText().toString());
+        if (!Double.isNaN(opVALUE1)) {
+
+            opVALUE2 = Double.parseDouble(operation.getText().toString());
+            switch (ACTION) {
+                case signoMAS:
+                    opVALUE1 = opVALUE1 + opVALUE2;
+                    break;
+                case signoMENOS:
+                    opVALUE1 = opVALUE1 - opVALUE2;
+                    break;
+                case signoMULT:
+                    opVALUE1 = opVALUE1 * opVALUE2;
+                    break;
+                case signoDIV:
+                    opVALUE1 = opVALUE1 / opVALUE2;
+                    break;
+                case signoIGUAL:
+                    break;
+            }
+        }
+        else{
+            opVALUE1 = Double.parseDouble(operation.getText().toString());
+        }
+
     }
+
 }
